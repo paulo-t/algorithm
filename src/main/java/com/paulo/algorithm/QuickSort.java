@@ -4,53 +4,50 @@ import com.alibaba.fastjson.JSON;
 
 import java.util.Random;
 
+import static org.apache.commons.lang3.ArrayUtils.swap;
+
+/**
+ * 单路快速排序，大部分情况下排序速度都很快
+ * 缺点: 如果存在大量重复的元素(比如100w条数据中全都是1-10的数字)会导致每次递归一半数据很大一半数据很小
+ */
 public class QuickSort {
+    public static void main(String[] args) {
+        int[] arr = {1,9,2,7,3,0,5,6,7};
+        sort(arr,9);
+        System.out.println(JSON.toJSONString(arr));
+    }
     public static void sort(int[] arr, int n) {
-        __sort(arr, 0, n - 1);
+        __sort(arr,0,n-1);
     }
 
-
-    private static void __sort(int[] arr, int l, int r) {
-        if (r -l <= 15) {
+    public static void __sort(int[] arr, int l, int r) {
+        if (r - l < 15) {
             InsertSort.sort(arr,l,r);
             return;
         }
 
-        //随机选择一个数作为中间值，防止数组有序时调用树的深度过深
-        Random random = new Random();
-        int num = random.nextInt(r - l + 1) + l;
-        int temp = arr[l];
-        arr[l] = arr[num];
-        arr[num] = temp;
-
-
-        int index = __partition(arr, l, r);
-
-        __sort(arr, l, index - 1);
-        __sort(arr, index + 1, r);
+        int p = __partition(arr, l, r);
+        __sort(arr, l, p - 1);
+        __sort(arr, p + 1, r);
     }
 
-    private static int __partition(int[] arr, int l, int r) {
-        int j = l;
+    public static int __partition(int[] arr, int l, int r) {
+        //解决有序数组时
+        Random random = new Random(System.currentTimeMillis());
+        int swapIndex = random.nextInt(r - l + 1) + l;
+        swap(arr,l,swapIndex);
 
+        int j = l;
+        //[l+1,j] <= arr[l], [j+1,i) > arr[l]
         for (int i = l + 1; i <= r; i++) {
             if(arr[i] < arr[l]){
-                int temp = arr[j+1];
-                arr[j+1] = arr[i];
-                arr[i] = temp;
+                swap(arr,j+1,i);
                 j++;
             }
         }
 
-        int temp = arr[l];
-        arr[l] = arr[j];
-        arr[j] = temp;
-        return j;
-    }
+        swap(arr,l,j);
 
-    public static void main(String[] args) {
-        int[] arr = {1,5,2,9,7,3,8,4,20,0};
-        QuickSort.sort(arr,10);
-        System.out.println(JSON.toJSONString(arr));
+        return j;
     }
 }
