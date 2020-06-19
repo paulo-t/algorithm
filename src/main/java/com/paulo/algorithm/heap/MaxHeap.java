@@ -59,7 +59,7 @@ public class MaxHeap {
     /**
      * 添加数据
      */
-    public void insert(int item) {
+    public void push(int item) {
         if (counter + 1 > capacity) {
             System.out.println("heap is full");
             return;
@@ -84,10 +84,10 @@ public class MaxHeap {
 
     public static void main(String[] args) {
         MaxHeap heap = new MaxHeap(10);
-        heap.insert(1);
-        heap.insert(10);
-        heap.insert(2);
-        heap.insert(12);
+        heap.push(1);
+        heap.push(10);
+        heap.push(2);
+        heap.push(12);
 
         while(! heap.isEmpty()){
             System.out.println(heap.pop());
